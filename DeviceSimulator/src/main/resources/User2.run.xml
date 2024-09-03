@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="User2" type="Application" factoryName="Application" singleton="false">
+    <option name="MAIN_CLASS_NAME" value="org.example.Main" />
+    <module name="DeviceSimulator" />
+    <option name="PROGRAM_PARAMETERS" value="b33f0d1a-2f84-42f1-b69a-ed77829202d6" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="org.example.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

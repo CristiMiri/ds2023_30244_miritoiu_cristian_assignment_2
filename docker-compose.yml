@@ -1,0 +1,98 @@
+version: "3"
+
+services:
+  user-database-container:
+    image: postgres:latest
+    container_name: user-database
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: userdatabase
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: sql
+    networks:
+      - myNetwork
+
+  device-database-container:
+    image: postgres:latest
+    container_name: device-database
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: sql
+      POSTGRES_DB: devicedatabase
+    networks:
+      - myNetwork
+
+  monitoring-database-container:
+    image: postgres:latest
+    container_name: monitoring-database
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: sql
+      POSTGRES_DB: monitoringdatabase
+      # DB_DBNAME: monitoringdatabase
+    networks:
+      - myNetwork
+
+  user-service-container:
+    image: user-service-img:latest
+    container_name: user-service
+    ports:
+      - "8080:8080"
+    environment:
+      DB_IP: user-database-container
+      DB_DBNAME: userdatabase
+      # DEVICE_DOMAIN: backend-device-container
+    depends_on:
+      - user-database-container
+      - device-service-container
+    networks:
+      - myNetwork
+
+  device-service-container:
+    image: device-service-img:latest
+    container_name: device-service
+    ports:
+      - "8081:8081"
+    environment:
+      DB_IP: device-database-container
+      DB_DBNAME: devicedatabase
+    depends_on:
+      - device-database-container
+    networks:
+      - myNetwork
+
+  monitoring-service-container:
+    image: monitoring-service-img:latest
+    container_name: monitoring-service
+    ports:
+      - "8082:8082"
+    environment:
+      DB_IP: monitoring-database-container
+      DB_DBNAME: monitoringdatabase
+    depends_on:
+      - monitoring-database-container
+    networks:
+      - myNetwork
+
+  frontend-container:
+    image: frontend_image:latest
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    expose:
+      - "3000"
+    depends_on:
+      - user-service-container
+      - device-service-container
+      - monitoring-service-container
+    networks:
+      - myNetwork
+
+networks:
+  myNetwork:
+    driver: bridge
